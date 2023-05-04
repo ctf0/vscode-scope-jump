@@ -2,7 +2,7 @@
     "name": "scope-jump",
     "displayName": "Scope Jump",
     "description": "jump to scope end/start via hover",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "publisher": "ctf0",
     "author": "ctf0",
     "repository": "https://github.com/ctf0/vscode-scope-jump",

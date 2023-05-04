@@ -7,3 +7,7 @@
 ## 0.0.2
 
 - faster scope lookup
+
+## 0.0.3
+
+- fix wrong scope jump in some cases
