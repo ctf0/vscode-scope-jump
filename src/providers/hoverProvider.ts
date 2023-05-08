@@ -37,7 +37,7 @@ export default class HoverProvider implements vscode.HoverProvider {
             const link = new vscode.MarkdownString('', true);
             link.isTrusted = true;
 
-            if (atStart) {
+            if (atStart || atSelectionStart) {
                 const argsJump = prepareArgs(new vscode.Range(end, end), 'down');
                 const jumpEnd = vscode.Uri.parse(`command:scopeJump.jumpToLine?${argsJump}`);
 
@@ -51,35 +51,7 @@ export default class HoverProvider implements vscode.HoverProvider {
                 return new vscode.Hover(link, new vscode.Range(start, start));
             }
 
-            if (atSelectionStart) {
-                const argsJump = prepareArgs(new vscode.Range(end, end), 'down');
-                const jumpEnd = vscode.Uri.parse(`command:scopeJump.jumpToLine?${argsJump}`);
-
-                const argsSelect = prepareArgs(new vscode.Range(selectionStart, end), 'down');
-                const selectEnd = vscode.Uri.parse(`command:scopeJump.jumpToLine?${argsSelect}`);
-
-                link.appendMarkdown(`[${jump.text}${jump.icon.down}](${jumpEnd})`);
-                link.appendMarkdown(separator);
-                link.appendMarkdown(`[${select.text}${select.icon}](${selectEnd})`);
-
-                return new vscode.Hover(link, new vscode.Range(selectionStart, selectionStart));
-            }
-
-            if (atSelectionEnd) {
-                const argsJump = prepareArgs(new vscode.Range(start, start), 'up');
-                const jumpEnd = vscode.Uri.parse(`command:scopeJump.jumpToLine?${argsJump}`);
-
-                const argsSelect = prepareArgs(new vscode.Range(selectionStart, end), 'up');
-                const selectEnd = vscode.Uri.parse(`command:scopeJump.jumpToLine?${argsSelect}`);
-
-                link.appendMarkdown(`[${jump.text}${jump.icon.up}](${jumpEnd})`);
-                link.appendMarkdown(separator);
-                link.appendMarkdown(`[${select.text}${select.icon}](${selectEnd})`);
-
-                return new vscode.Hover(link, new vscode.Range(selectionStart, selectionStart));
-            }
-
-            if (atEnd) {
+            if (atEnd || atSelectionEnd) {
                 const argsJump = prepareArgs(new vscode.Range(start, start), 'up');
                 const jumpStart = vscode.Uri.parse(`command:scopeJump.jumpToLine?${argsJump}`);
 
@@ -137,7 +109,7 @@ function prepareArgs(range: vscode.Range, to: string): string {
     }]));
 }
 
-async function getFileSymbols(uri: vscode.Uri): Promise<vscode.DocumentSymbol[] | undefined> {
+async function getFileSymbols(uri: vscode.Uri) {
     return vscode.commands.executeCommand('vscode.executeDocumentSymbolProvider', uri);
 }
 
